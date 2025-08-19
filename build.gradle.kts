@@ -31,6 +31,11 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	//API//
+	implementation("org.apache.poi:poi:5.4.1")
+	implementation("org.apache.poi:poi-ooxml:5.4.1")
+	implementation("org.apache.pdfbox:pdfbox:3.0.5")
 }
 
 tasks.withType<Test> {
