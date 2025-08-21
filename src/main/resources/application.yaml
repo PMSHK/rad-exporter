@@ -1,0 +1,10 @@
+spring:
+  data:
+    exporters:
+      excel:
+        formats:
+        - xls
+        - xlsx
+      pdf:
+        formats:
+          - pdf
