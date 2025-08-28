@@ -5,4 +5,8 @@ import com.radiation.exporter.dto.DataDto;
 import java.util.List;
 
 public record MedicineDataDto(RadTypeDataDto radTypeDataDto, List<PanelDataDto> panelDataDtoList) implements DataDto {
+    @Override
+    public String getTemplateName() {
+        return "medicine";
+    }
 }
