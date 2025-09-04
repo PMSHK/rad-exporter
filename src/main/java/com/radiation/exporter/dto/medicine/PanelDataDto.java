@@ -9,4 +9,5 @@ public record PanelDataDto(TextFormDataDto textFormDataDto,
                            List<OpeningsDataDto> openingDtoList,
                            SourceDataDto sourceDataDto,
                            String additionalLead) {
+
 }

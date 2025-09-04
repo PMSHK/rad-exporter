@@ -5,6 +5,10 @@ spring:
         formats:
         - xls
         - xlsx
+        forms:
+          - medicine
+          - veterinary
+          - flaw
       pdf:
         formats:
           - pdf

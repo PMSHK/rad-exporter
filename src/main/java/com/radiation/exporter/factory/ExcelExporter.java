@@ -1,7 +1,6 @@
 package com.radiation.exporter.factory;
 
 import com.radiation.exporter.data.ExcelPathResolver;
-import com.radiation.exporter.data.ExcelTemplateFiller;
 import com.radiation.exporter.data.ExcelTemplateLoader;
 import com.radiation.exporter.data.ExportRequest;
 import com.radiation.exporter.data.ExportResult;
@@ -11,9 +10,7 @@ import com.radiation.exporter.data.TemplatePathResolver;
 import com.radiation.exporter.factory.properties.ExcelExporterProperties;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -31,10 +28,12 @@ public class ExcelExporter implements Exporter {
     private final TemplateLoader<Workbook> templateLoader;
     private final TemplatePathResolver templatePathResolver;
 
-    public ExcelExporter(ExcelExporterProperties properties) {
+    public ExcelExporter(ExcelExporterProperties properties,
+                         TemplateFiller<Workbook> templateFiller
+    ) {
         this.properties = properties;
         this.formats = new HashSet<>(properties.getFormats());
-        this.templateFiller = new ExcelTemplateFiller();
+        this.templateFiller = templateFiller;
         this.templateLoader = new ExcelTemplateLoader();
         this.templatePathResolver = new ExcelPathResolver();
     }
@@ -48,11 +47,11 @@ public class ExcelExporter implements Exporter {
     public ExportResult export(ExportRequest request) {
         Workbook workbook;
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            String filePath = templatePathResolver.resolveTemplatePath(request.data());
-            workbook = templateLoader.loadTemplate(filePath);
+            String templatePath = templatePathResolver.resolveTemplatePath(request.data());
+            workbook = templateLoader.loadTemplate(templatePath);
             templateFiller.fillTemplate(workbook, request.data());
             workbook.write(outputStream);
-            return new ExportResult(outputStream.toByteArray(),request.format().name(), request.fileName());
+            return new ExportResult(outputStream.toByteArray(), request.format().name(), request.fileName());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
